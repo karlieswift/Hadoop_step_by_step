@@ -1,0 +1,243 @@
+------------------------------准备工作---------------------------------------------
+1-rpm -qa | grep -i mysql 
+// -i代表不区分大小写，安装前需要查看是否有安装mysql，centos7不在默认安装mysql,但7也不能直接装
+因为
+
+2-[root@Haddoop_0 ~]# rpm -qa | grep -i mariadb
+会出现mariadb-libs-5.5.64-1.el7.x86_64
+直接卸载mariadb-libs-5.5.64-1.el7.x86_64
+-[root@Haddoop_0 ~]# rpm -e --nodeps mariadb-libs
+--nodeps，不检测依赖进度
+
+------------------------------准备工作---------------------------------------------
+
+
+
+所有前置步骤检查完成----》》》开始安装mysql
+
+1-将opt/software下的mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar，解压到自己的文件夹
+
+# tar -xvf mysql-5.7.28-1.el7.x86_64.rpm-bundle.tar -C ./mysql-rpm/   解压到opt/software/mysql-rpm/
+注意：这里的不是-zxvf，因为是.tar文件。
+查看解压的文件都有什么
+mysql-community-embedded-5.7.28-1.el7.x86_64.rpm
+mysql-community-libs-compat-5.7.28-1.el7.x86_64.rpm
+mysql-community-devel-5.7.28-1.el7.x86_64.rpm
+mysql-community-embedded-compat-5.7.28-1.el7.x86_64.rpm
+mysql-community-libs-5.7.28-1.el7.x86_64.rpm
+mysql-community-test-5.7.28-1.el7.x86_64.rpm
+mysql-community-common-5.7.28-1.el7.x86_64.rpm
+mysql-community-embedded-devel-5.7.28-1.el7.x86_64.rpm
+mysql-community-client-5.7.28-1.el7.x86_64.rpm
+mysql-community-server-5.7.28-1.el7.x86_64.rpm
+
+2-安装解压的5个文件（需要按顺序安装）
+# rpm -ivh mysql-community-common-5.7.28-1.el7.x86_64.rpm 
+# rpm -ivh mysql-community-libs-5.7.28-1.el7.x86_64.rpm 
+# rpm -ivh mysql-community-libs-compat-5.7.28-1.el7.x86_64
+# rpm -ivh mysql-community-client-5.7.28-1.el7.x86_64.rpm 
+# rpm -ivh mysql-community-server-5.7.28-1.el7.x86_64.rpm 
+注意：当安装最后一个rpm ----mysql-community-server-5.7.28-1.el7.x86_64.rpm包时出现问题
+----------------------------------------------------------------------------------------------------------------
+错误：依赖检测失败：
+	/usr/bin/perl 被 mysql-community-server-5.7.28-1.el7.x86_64 需要
+	perl(Getopt::Long) 被 mysql-community-server-5.7.28-1.el7.x86_64 需要
+	perl(strict) 被 mysql-community-server-5.7.28-1.el7.x86_64 需要
+
+-------------------------------------------------------------------------------------------------------------
+应该出现什么包依赖：现在进行处理安装
+先搜一下perl这个东西，yum search perl
+会看到perl.x86_64 : Practical Extraction and Report Language
+# yum -y install perl.x86_64
+进行安装，最终问题解决。
+
+
+
+
+
+
+
+3-目前还不能用，需要进行初始化，在初始化之间还需要做一些处理
+
+3-1在初始化之前需要看一下etc/my.cnf文件的datadir指向的目录的所有内容，查看datadir的值
+cat etc/my.cnf 查看文件内容发现
+datadir=/var/lib/mysql
+所以查看目录/var/lib/mysql，查看/var/lib/mysql是否有文件，第一次安装是没有文件内容的，但当再次卸载会有残留文件，所以初始化会失败，所以在此安装时，初始化之前需要删除mysql下的文件直接（初始系统是没有mysql文件夹，安装后有了MySQL文件，卸载后mysql文件夹没有被删除）
+
+3-2现在可以进行初始化# mysqld --initialize --user=mysql
+初始成功后启动mysql服务
+# systemctl start mysqld
+
+
+3-3登录
+mysql初次启动有一个root用户，会有一个root的临时密码
+查看临密码：在/var/log目录下有个文件mysqld.log查看文件内容cat mysqld.log       找到A temporary password is generated for root@localhost: 4<SdhhfI9oAb
+4<SdhhfI9oAb就是临时密码。
+[root@Hadoop_1 /]# mysql -uroot -p
+Enter password: （输入上述临时密码）
+
+进入mysql后一定要改密码；否则出现error
+ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.
+改密码：
+mysql> set password=password("123456");
+
+
+
+
+
+4-mysql安装目录
+mysql安装在/var/lib/mysql
+
+
+5-开机自启：
+[root@Hadoop_1 etc]# systemctl list-unit-files |grep mysql
+mysqld.service                                enabled 
+mysqld@.service                               disabled
+
+（1）Mysql服务是开机自动启动
+[root@Hadoop_1 ~]$ systemctl list-unit-files | grep mysqld.service
+mysqld.service                                enabled
+（2）如果要取消开机自启动，
+[root@Hadoop_1 mysql]# systemctl disable mysqld.service
+Removed symlink /etc/systemd/system/multi-user.target.wants/mysqld.service.
+
+[root@Hadoop_1 mysql]# systemctl list-unit-files | grep mysqld.service
+mysqld.service                                disabled 
+
+
+
+
+
+
+
+
+6-修改字符集：
+默认安装不存中文
+当不能操作中文字符集时，对etc/my.cnf文件加入一些编码
+
+[client]
+default-character-set=utf8
+[mysqld]
+character_set_server=utf8
+collation-server=utf8_general_ci
+注意：上述代码是[mysqld]的
+注意：下列代码是[mysql]的，所以在文件内容的最后一行加入
+[mysql] 
+default-character-set=utf8
+
+
+------------------------------------------------------------
+# For advice on how to change settings please see
+# http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html
+
+[mysqld]
+#
+# Remove leading # and set to the amount of RAM for the most important data
+# cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.
+# innodb_buffer_pool_size = 128M
+#
+# Remove leading # to turn on a very important data integrity option: logging
+# changes to the binary log between backups.
+# log_bin
+#
+# Remove leading # to set options mainly useful for reporting servers.
+# The server defaults are faster for transactions and fast SELECTs.
+# Adjust sizes as needed, experiment to find the optimal values.
+# join_buffer_size = 128M
+# sort_buffer_size = 2M
+# read_rnd_buffer_size = 2M
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+----------------------------------------------------------------------------
+记得重启mysql ::# systemctl  restart mysqld
+
+
+
+修改数据库的编码：
+mysql> show create database mydb;//查看数据库mydb的编码
+
+mysql> show create table mytb1;//查看数据表mytb1的编码
+mysql> alter database mydb character set 'utf8';//更改数据库编码
+
+mysql> alter table mytb1 convert to  character set 'utf8';//转换数据表的编码
+
+mysql的语法规定
+当我们执行一些语句时  代码却执行通过，但不符合我们的预期结果，可能是我们的语法写的不严谨或者逻辑错误，mysql默认是直接执行的，如果我们想要在执行时直接知道是我们的语法错误，可以对sql的mode进行配置
+临时修改：mysql> set @@sql_mode='';
+再次执行就会出错
+
+
+永久修改，需要在配置文件etc/my.cnf中修改
+#添加下列配置，然后重启mysql即可
+[mysqld]
+sql_mode=''
+
+
+
+例子：
+--------------------------------------------------------------------
+数据库：
++------+--------+------+------+
+| id   | NAME   | age  | dept |
++------+--------+------+------+
+|    1 | zhang3 |   33 |  101 |
+|    2 | li4    |   34 |  101 |
+|    3 | wang5  |   34 |  102 |
+|    4 | zhao6  |   34 |  102 |
+|    5 | tian7  |   36 |  102 |
++------+--------+------+------+
+
+查询每个dept中年龄最大的人：
+错误结果：
+SELECT NAME,dept,MAX(age) FROM mytbl2 GROUP BY dept;
+
+# 分组:  group by以后， select后面只能跟 组标识 及 聚合函数(组函数)
+
+正确结果：
+SELECT id,name,ab.dept,ab.maxage FROM mytbl2 m INNER JOIN(SELECT dept,MAX(age)maxage FROM mytbl2 GROUP BY dept)ab ON ab.dept=m.dept AND m.age=ab.maxage;
+
+-----------------------------------------------------------------------------------------------
+
+
+
+
+7-SQLyog连接linux的mysql
+首次直接连接连接失败，
+需要对linux的mysql下的mysql数据库user表进行修改
+因为 当前root用户对应的host值为localhost，意味着只允许本机连接，   需要将host的值修改为%，表示允许所有远程通过 TCP方式的连接
+
+mysql> show datanases;
+
+mysql> use mysql;
+
+mysql> select host ,user from user;
++-----------+---------------+
+| host      | user          |
++-----------+---------------+
+| localhost | mysql.session |
+| localhost | mysql.sys     |
+| localhost | root          |
++-----------+---------------+
+需要更新root的host=“%”
+mysql> update user set host="%" where user='root';
+刷新
+mysql> flush privilages;
+
+
+
+
+
+
+
+
+
+
+
+
+
