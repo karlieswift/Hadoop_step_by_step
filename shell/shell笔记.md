@@ -15,30 +15,49 @@
 
 *** 注意：在文件里最好加入#!/bin/bash指定bash的path,以防出错***
 
-`#!/bin/bash`
+`
+
+```
+#!/bin/bash`
 
 `echo "hello world!"`
 `echo "taylor swift!"`
 
-`insert.`
+`insert.
+```
+
+`
 
 ### 3-excute script的四种方法  
 
-1. `方法1：bash  helloworld.sh`
+1. **四种方法**
+
+   ```
+    方法1：bash  helloworld.sh`
    `方法2：sh  helloworld.sh`
+   ```
+
    **下面的两个方法需要改文件有执行权限**
    需要修改权限  chmod u+x  helloworld.sh
-   `方法3：./helloworld.sh`
-   `方法4：.helloworld.sh`
 
-2. 
-    **事实上查询bash会发现，sh是bash的软连接**
+   ```
+   方法3：./helloworld.sh
+   方法4：.helloworld.sh
+   ```
 
-   `ll |grep bash`
+   `
+
+2. **事实上查询bash会发现，sh是bash的软连接**
+
+   ```
+    ll |grep bash`
    `-rwxr-xr-x. 1 root root     964600 8月   8 2019 bash`
    `lrwxrwxrwx. 1 root root         10 5月   6 17:43 bashbug -> bashbug-64`
    `-rwxr-xr-x. 1 root root       6964 8月   8 2019 bashbug-64`
-   `lrwxrwxrwx. 1 root root          4 5月   6 17:43 sh -> bash`
+   `lrwxrwxrwx. 1 root root          4 5月   6 17:43 sh -> bash
+   ```
+
+   `
 
 -------------------------------------------
 
@@ -79,16 +98,26 @@
 ### 6-运算符(+,-,*,/)
 
 **计算(2+3)*2  格式 变量=$[ 表达式]      **
-`[taylor@Hadoop_1 Codes]$ a=$[(2+3)*2]`
+
+```
+ [taylor@Hadoop_1 Codes]$ a=$[(2+3)*2]`
 `[taylor@Hadoop_1 Codes]$ echo $a`
-`10`
+`10
+```
+
+`
 
 ### 7-条件判断
 
-1.  数字判断
-    -lt:less than (<)        -le:less equal(<=)
-    -gt:greater than (>)        -le:greater equal(>=)
+1. 数字判断
+
+   ```
+   -lt:less than (<)        -le:less equal(<=)
+   -gt:greater than (>)        -le:greater equal(>=)
    -eq :equal(=)         -ne:not equal(!=)
+   ```
+
+   
 
 2. 文件权限
    -r 有读的权限(read )   -w 有写的权限（write）-x 有执行的权限（execute）
@@ -123,12 +152,17 @@
 ### 8-if -else
 
 1. 编写if-else 传入参数
-   `if [ ]`
+
+   ```
+   if [ ]`
    `then   echo "   "`
    `elif  [ ]`
    `then   echo " "`
    `else  echo " "`
-   `fi`
+   `fi
+   ```
+
+   `
 
 2. > **注意if与[ ]有空格 ，[ ]括号里两边也要有空格**
    > #!/bin/bash
@@ -146,12 +180,19 @@
 1. case行尾必须为单词“in”，每一个模式匹配必须以右括号“）”结束。
    双分号“;;”表示命令序列结束，相当于java中的break。
    最后的“*）”表示默认模式，相当于java中的default。
-2. `#!/bin.bash`
+
+2. case实例
+
+   ```
+   #!/bin.bash`
    `case $1 in`
    `"1")  echo "1-1" ;;`
    `"2")  echo "2-2" ;;`
    `*)    echo "default"`
-   `esac`
+   `esac
+   ```
+
+   `
 
 ### 10-for
 
@@ -165,16 +206,20 @@
 
      done
 
-2. #!/bin/bash
-
+2. ```
+   #!/bin/bash
+   
    sum=0
    for((i=1;i<=100;i++))
    do
         sum=$[$i+$sum]
    done
-
+   
    echo "sum=$sum"
    echo "sum="$sum
+   ```
+
+   
 
 ### 11-while
 
@@ -323,6 +368,7 @@
     13
 
  
+
 
 
 ```
