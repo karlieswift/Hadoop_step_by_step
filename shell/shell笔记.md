@@ -64,6 +64,7 @@
 ### 4-参数parameter
 
 1. 可以脚本里传入参数
+
    用$1,$2....${10},${11} 当参数，注意当参数parameter -ge 10 需要加入{nunber}
    $#  获取所有输入参数个数，常用于循环
    $* 这个变量代表命令行中所有的参数，$*把所有的参数看成一个整体
@@ -90,6 +91,33 @@
    > 4
    > 1 2 3 a
    > 1 2 3 a
+
+4. $* and $@的区别
+
+   ```
+   #在test.sh文件写入  
+   echo "---------------*--------------"
+   for j in "$*"
+   do 
+   echo "taylor $j"
+   done
+   
+   echo "--------------@---------------"
+   for k in "$@"
+     do 
+        echo "taylor $k"
+     done
+     
+   执行bash test.sh a b c
+   
+   $*当做一个整体 返回a b c
+   $@区分对待 返回
+   a
+   b
+   c
+   ```
+
+   
 
 ### 5-echo $?
 
@@ -371,6 +399,7 @@
 
 
 
+
 ```
  3- awk  -F: '{print "Filename:" FILENAME, "row:"NR,"col:" NF }' passwd 
 Filename:passwd row:1 col:7
@@ -508,7 +537,7 @@ wc [选项参数] filename
 
    cat  passwd  | grep ro*t  匹配rt,rot，root等
 
-6. [ ]表示匹配某个范围内的一个字符，例如
+6. [ ] 表示匹配某个范围内的一个字符，例如
 
    [6,8]------匹配6或者8
 
