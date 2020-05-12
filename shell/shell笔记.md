@@ -2,31 +2,28 @@
 
 查看# `cat /etc/shells` 
 
+```
 /bin/sh
 /bin/bash
 /usr/bin/sh
-
 /usr/bin/bash
+```
+
+
 
 ### 2- 创建helloworld.sh文件
 
 `vi helloworld.sh`
 在helloworld.sh 文件里insert 内容 
 
-*** 注意：在文件里最好加入#!/bin/bash指定bash的path,以防出错***
-
-`
+*** 注意：在文件里最好加入#!/bin/bash指定bash的path,以防出错**
 
 ```
 #!/bin/bash`
-
 `echo "hello world!"`
 `echo "taylor swift!"`
-
 `insert.
 ```
-
-`
 
 ### 3-excute script的四种方法  
 
@@ -70,27 +67,31 @@
    $* 这个变量代表命令行中所有的参数，$*把所有的参数看成一个整体
    $@ 这个变量也代表命令行中所有的参数，不过$@把每个参数区分对待
 
-2. > parameter.sh内容
-   > #!/bin/bash
-   > echo 'demo of parameters'
-   > echo $1
-   > echo $2
-   > echo $3
-   > echo $4
-   > echo $#
-   > echo $*
-   > echo $@
+2. ```
+   parameter.sh内容
+   #!/bin/bash
+   echo 'demo of parameters'
+   echo $1
+   echo $2
+   echo $3
+   echo $4
+   echo $#
+   echo $*
+   echo $@
+   ```
 
-3. > 执行：bash  parameter.sh 1 2 3 a
-   > output:
-   > demo of parameters
-   > 1
-   > 2
-   > 3
-   > a
-   > 4
-   > 1 2 3 a
-   > 1 2 3 a
+3. ```
+   执行：bash  parameter.sh 1 2 3 a
+   output:
+   demo of parameters
+   1
+   2
+   3
+   a
+   4
+   1 2 3 a
+   1 2 3 a
+   ```
 
 4. $* and $@的区别
 
@@ -117,7 +118,6 @@
    c
    ```
 
-   
 
 ### 5-echo $?
 
@@ -130,10 +130,8 @@
 ```
  [taylor@Hadoop_1 Codes]$ a=$[(2+3)*2]`
 `[taylor@Hadoop_1 Codes]$ echo $a`
-`10
+`10`
 ```
-
-`
 
 ### 7-条件判断
 
@@ -145,12 +143,12 @@
    -eq :equal(=)         -ne:not equal(!=)
    ```
 
-   
-
 2. 文件权限
    -r 有读的权限(read )   -w 有写的权限（write）-x 有执行的权限（execute）
 
 3. 按照文件类型进行判断
+
+   ```
    -f 文件存在并且是一个常规的文件（file） -e 文件存在（existence） -d 文件存在并是一个目录（directory）
    -e 判断对象是否存在
    -d 判断对象是否存在，并且为目录
@@ -163,19 +161,24 @@
    -x 判断对象是否存在，并且可执行
    -O 判断对象是否存在，并且属于当前用户
    -G 判断对象是否存在，并且属于当前用户组
+   ```
 
-4. > [taylor@Hadoop_1 Codes]$ [ -e oo.xx ]      --文件不存在
-   > [taylor@Hadoop_1 Codes]$ echo $?
-   > 1
-   > [taylor@Hadoop_1 Codes]$ [ -e pp.sh ]    --文件存在
-   > [taylor@Hadoop_1 Codes]$ echo $?
-   > 0
-   > [taylor@Hadoop_1 ~]$ [ -d Files ]  --文件夹存在
-   > [taylor@Hadoop_1 ~]$ echo $?
-   > 0
-   > [taylor@Hadoop_1 ~]$ [ -f Files ]  --文件夹存在但不是常规文件
-   > [taylor@Hadoop_1 ~]$ echo $?
-   > 1
+4. ```
+   [taylor@Hadoop_1 Codes]$ [ -e oo.xx ]      --文件不存在
+   [taylor@Hadoop_1 Codes]$ echo $?
+   1
+   [taylor@Hadoop_1 Codes]$ [ -e pp.sh ]    --文件存在
+   [taylor@Hadoop_1 Codes]$ echo $?
+   0
+   [taylor@Hadoop_1 ~]$ [ -d Files ]  --文件夹存在
+   [taylor@Hadoop_1 ~]$ echo $?
+   0
+   [taylor@Hadoop_1 ~]$ [ -f Files ]  --文件夹存在但不是常规文件
+   [taylor@Hadoop_1 ~]$ echo $?
+   1
+   ```
+
+   
 
 ### 8-if -else
 
@@ -193,6 +196,8 @@
    `
 
 2. > **注意if与[ ]有空格 ，[ ]括号里两边也要有空格**
+   >
+   > ```
    > #!/bin/bash
    > if [ $1 -eq 1 ]
    > then
@@ -200,8 +205,12 @@
    > elif [ $1 -eq 2 ]
    > then echo "2-2"
    > else
-   >   echo "3-3"
+   > echo "3-3"
    > fi
+   > ```
+   >
+   > 
+   >
 
 ### 9- case
 
@@ -226,13 +235,12 @@
 
 1. 基本语法
 
+   ```
    for (( 初始值;循环控制条件;变量变化 )) 
-
      do 
-
-   ​    程序 
-
+       程序 
      done
+   ```
 
 2. ```
    #!/bin/bash
@@ -251,90 +259,117 @@
 
 ### 11-while
 
-1. >  while的语法
-   > while [ 条件判断式 ] 
-   >   do 
-   >     程序
-   >   done
+1. ```
+   while的语法
+   while [ 条件判断式 ] 
+   do 
+    程序
+   done
+   ```
 
-2. > `#!/bin/bash`
-   > `sum=0`
-   > `i=1`
-   > `while [ $i -le 100 ]`
-   > `do`
-   >  `sum=$[$sum+$i]`
-   >  `i=$[$i+1]`
-   > `done`
-   > `echo "sum=$sum"`
+   
+
+2. ```
+   `#!/bin/bash`
+   `sum=0`
+   `i=1`
+   `while [ $i -le 100 ]`
+   `do`
+   `sum=$[$sum+$i]`
+   `i=$[$i+1]`
+   `done`
+   `echo "sum=$sum"
+   ```
+
+   `
 
 ### 12-read读取控制台输入
 
   从控制台读取 -t 代表读取等待的时间，-p 代表输入的提示的信息
 
-> #!/bin/bash
-> read -t 10 -p "enter a number " number
-> echo "your number is "$number
+```
+#!/bin/bash
+read -t 10 -p "enter a number " number
+echo "your number is "$number
+```
+
+
 
 ### 13- basename and dirname
 
 1. basename命令会删掉所有的前缀包括最后一个（‘/’）字符，然后将字符串显示出来。
 
-   >  basename root/taylor/t.java
-   >  t.java
+   ```
+   basename root/taylor/t.java
+   t.java
+   
+   basename root/taylor/t.java  .java
+   t
+   ```
 
-   > basename root/taylor/t.java  .java
-   >  t
+   
 
 2. dirname 文件绝对路径:功能描述：从给定的包含绝对路径的文件名中去除文件名（非目录的部分），然后返回剩下的路径（目录的部分））
 
-   > dirname root/taylor/t.java
-   > root/taylor
+   ```
+   dirname root/taylor/t.java
+   root/taylor
+   #下面返回的还有2个"."
+   dirname root/taylor/t.java taylor swift
+   root/taylor
+   .
+   .
+   ```
 
-   > dirname root/taylor/t.java taylor swift
-   > root/taylor
-   > .
-   > .
+   
 
 ### 14 -function自定义函数
 
 函数返回值，只能通过$?系统变量获得，可以显示加：return返回，如果不加，将以最后一条命令运行结果，作为返回值。return后跟数值n(0-255)
 
-> #!/bin/bash
-> function add1(){
-> return $[$1+$2]
-> }
-> add1 $1 $2
+```
+#!/bin/bash
+function add1(){
+return $[$1+$2]
+}
+add1 $1 $2
+```
 
 无返回值
 
-> #!/bin/bash
-> total=0
-> function add(){
-> total=$[$1+$2]
-> }
-> read -p "enter number" n1
-> read -p "enter number" n2
-> add $n1 $n2
-> echo $total
+```
+#!/bin/bash
+total=0
+function add(){
+total=$[$1+$2]
+}
+read -p "enter number" n1
+read -p "enter number" n2
+add $n1 $n2
+echo $total
+```
+
+
 
 ### 15-shell工具cut
 
-1. cut
-
-   存在一个文件cut.txt文件内容
-
-   taylor swift
-   taylor  swift
-   hello world
-   taylorswift
-
-    **-f	列号，提取第几列**
-   **-d	分隔符，按照指定分隔符分割列**
-   **-c	指定具体的字符**
-
-   解释：cut -d " " -f 1 cut.txt   取分割后的第一列
-
-​       解释：cut -d " " -f 1,3 cut.txt   取分割后的第1,3列
+> 1. cut
+>
+>    存在一个文件cut.txt文件内容
+>
+>    > taylor swift
+>    > taylor  swift
+>    > hello world
+>    > taylorswift
+>
+>     **-f	列号，提取第几列**
+>    **-d	分隔符，按照指定分隔符分割列**
+>    **-c	指定具体的字符**
+>
+>    解释：cut -d " " -f 1 cut.txt   取分割后的第一列
+>
+> ​       解释：cut -d " " -f 1,3 cut.txt   取分割后的第1,3列
+>
 
 ​        单词中间有一个空格分成2列，2个空格 分成3列 其中第二列为空格
 
@@ -394,11 +429,6 @@
     12
     /bin/bash
     13
-
- 
-
-
-
 
 ```
  3- awk  -F: '{print "Filename:" FILENAME, "row:"NR,"col:" NF }' passwd 
