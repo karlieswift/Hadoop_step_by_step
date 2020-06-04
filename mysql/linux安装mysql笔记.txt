@@ -103,7 +103,8 @@ Removed symlink /etc/systemd/system/multi-user.target.wants/mysqld.service.
 
 [root@Hadoop_1 mysql]# systemctl list-unit-files | grep mysqld.service
 mysqld.service                                disabled 
-
+(3) 设置开机自动启动
+[root@Hadoop_1 mysql]# systemctl enable mysqld.service
 
 
 
@@ -227,7 +228,7 @@ mysql> select host ,user from user;
 需要更新root的host=“%”
 mysql> update user set host="%" where user='root';
 刷新
-mysql> flush privilages;
+mysql> flush privileges;
 
 
 
