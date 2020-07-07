@@ -1,0 +1,40 @@
+
+通过scala实现简单的分布式计算
+Cilent 向Master发送任务，Master向Worker提交Task,最后Worker返回结果
+
+具体步骤：
+1. 服务器中Master是独立的应用
+2.Worker1, Worker2表示计算节点，也是独立的应用。
+3. Master可以链接到Worker1, Worker2 (机器地址，端口号)
+4. User链接Master
+5. User向Master发出计算请求：数据，计算逻辑
+6. Master接收到计算请求后，对数据和逻辑进行封装。封装成一个一个的Task
+7. Master链接Worker1, 将Task1发送给Worker1计算
+8. Master链接Worker2, 将Task2发送给Worker2计算
+9. Worker1和Worker2开始执行计算
+10. Worker1和Worker2将计算结果Result分别返回到Master中
+11. 将不同worker的计算结果在Master中进行合并操作。
+
+
+
+此代码的不足：
+ 1-Master的代码workerResult = Array.fill[Int](wcnt)(-1)，这里用-1填充，当计算逻辑是相减时，会出现计算不完整，
+ 2-端口可能存在冲突
+
+
+
+ 结果：
+             Master已经启动......
+             Set(9097, 9006, 9018, 9023, 9049, 9013)
+             Set(9097, 9006, 9018, 9023, 9049, 9013)
+             Set(9097, 9006, 9018, 9023, 9049, 9013)
+             Set(9097, 9006, 9018, 9023, 9049, 9013)
+             Set(9097, 9006, 9018, 9023, 9049, 9013)
+             Set(9097, 9006, 9018, 9023, 9049, 9013)
+             给Worker[9097]发送计算任务:List(100, 11)
+             给Worker[9006]发送计算任务:List(23, 21)
+             给Worker[9018]发送计算任务:List(2, 6)
+             接收Worker[9097]计算结果1100
+             接收Worker[9006]计算结果483
+             接收Worker[9018]计算结果12
+             作业最终的执行结果为 ：6375600
