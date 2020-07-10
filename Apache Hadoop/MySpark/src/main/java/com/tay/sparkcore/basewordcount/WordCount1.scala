@@ -37,6 +37,8 @@ object WordCount1 {
     val result: RDD[(String, Int)] = wordmap.reduceByKey(_+_)
 
     result.collect().foreach(println)
+    lines.stop()
+
 
   }
 }
