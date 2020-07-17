@@ -8,5 +8,5 @@ package com.tay.sparkFramwork.core
  */
 trait TService {
 
-  def analysis()
+  def analysis():Any
 }
