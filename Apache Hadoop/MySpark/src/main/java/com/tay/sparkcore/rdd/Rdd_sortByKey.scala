@@ -8,6 +8,7 @@ import org.apache.spark.rdd.RDD
  *         date: 2020/7/13 15:35 
  *         ClassName: Rdd_sortByKey  
  * @version java "13.0.1"
+ *          自定义排序  类要实现sortByKey
  */
 object Rdd_sortByKey {
   def main(args: Array[String]): Unit = {
@@ -37,19 +38,24 @@ object Rdd_sortByKey {
      */
 
     val tuples = List(
-      (new User(), 1), (new User(), 1)
+      (new User(12), 1),(new User(93), 1), (new User(33), 1)
     )
    val rdd1: RDD[(User, Int)] = sc.makeRDD(tuples,2)
-    rdd1.sortByKey()
+    rdd1.sortByKey().collect().foreach(println)
 
+    /**
+     * (User(93),1)
+     * (User(33),1)
+     * (User(12),1)
+     */
     sc.stop()
 
 
   }
 
 }
-class User extends Ordered[User]{
+case class User(age:Int) extends Ordered[User]{
   override def compare(that: User): Int = {
-    0
+    that.age-age //降序
   }
 }
