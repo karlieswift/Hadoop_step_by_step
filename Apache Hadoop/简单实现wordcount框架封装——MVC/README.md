@@ -40,6 +40,8 @@
 11	pay_category_ids	String	一次支付中所有品类的ID集合
 12	pay_product_ids	String	一次支付中所有商品的ID集合
 13	city_id	Long	城市 id
+
+
 样例类：
 //用户访问动作表
 case class UserVisitAction(
@@ -55,8 +57,11 @@ case class UserVisitAction(
     order_product_ids: String,//一次订单中所有商品的ID集合
     pay_category_ids: String,//一次支付中所有品类的ID集合
     pay_product_ids: String,//一次支付中所有商品的ID集合
-    city_id: Long
-)//城市 id
+    city_id: Long  //城市 id
+) 
+
+
+
 6.1 需求1：Top10热门品类
  
 6.1.1 需求说明
