@@ -1,0 +1,67 @@
+//join连接数据
+select u.*,c.area,c.city_name,p.product_name
+from user_visit_action u
+join city_info  c on c.city_id=u.city_id
+join product_info p on u.click_product_id=p.product_id
+where u.click_product_id > 0  ==>t1
+
+//先区分组，在产品分组，统计
+select t1.area,t1.product_name, count(*) as clickcount
+from (
+select u.*,c.area,c.city_name,p.product_name
+from user_visit_action u
+join city_info  c on c.city_id=u.city_id
+join product_info p on u.click_product_id=p.product_id
+where u.click_product_id > 0
+)t1 group by t1.area,t1.product_name ==>t2
+
+
+select *,
+rank() over(partition by t2.area order by t2.clickcount desc) ranks
+from (
+select t1.area,t1.product_name, count(*) as clickcount
+from (
+select u.*,c.area,c.city_name,p.product_name
+from user_visit_action u
+join city_info  c on c.city_id=u.city_id
+join product_info p on u.click_product_id=p.product_id
+where u.click_product_id > 0
+)t1 group by t1.area,t1.product_name
+)t2  ===>t3
+
+//top3
+select *
+from (
+select *,
+rank() over(partition by t2.area order by t2.clickcount desc) ranks
+from (
+select t1.area,t1.product_name, count(*) as clickcount
+from (
+select u.*,c.area,c.city_name,p.product_name
+from user_visit_action u
+join city_info  c on c.city_id=u.city_id
+join product_info p on u.click_product_id=p.product_id
+where u.click_product_id > 0
+)t1 group by t1.area,t1.product_name
+)t2
+)t3 where t3.ranks<4
+
+
+
+从数据的处理方式
+流式数据处理:来一条处理一条
+批量数据处理：一批一批处理：
+
+从数据的处理的延迟时间区分
+离线数据处理: 一般以天，或者小时
+实时数据处理：一般以ms s为单位
+
+SparkStreaming
+
+
+
+
+
+
+
+
