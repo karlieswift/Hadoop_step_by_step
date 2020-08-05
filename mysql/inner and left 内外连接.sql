@@ -98,7 +98,7 @@ SELECT * FROM emp INNER JOIN dept ON emp.`dept_id` = dept.`id`;
 
  
 
--- 确定查询条件，我们查询的是唐僧的信息，员工表.name=karlie
+-- 确定查询条件，我们查询的是karlie的信息，员工表.name=karlie
 SELECT e.name,d.name FROM emp e INNER JOIN dept d ON d.id=e.dept_id  WHERE e.name="karlie"
 +--------+-----------+
 | NAME   | NAME      |
